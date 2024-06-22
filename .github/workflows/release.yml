@@ -1,0 +1,25 @@
+name: Release a new version
+on:
+  push:
+    # FIXME: for testing
+    branch:
+      - release-action
+    tags:
+      - '*.*.*'
+
+jobs:
+  luarocks-release:
+    name: Run luacheck
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install luarocks
+        run: >-
+          sudo apt install luarocks lua-dkjson
+
+      - name: Release on luarocks
+        run: |
+          luarocks upload lunamark-${{ github.ref_name }}-1.rockspec --api-key=${{ secrets.API_KEY }}
